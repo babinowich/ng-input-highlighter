@@ -1,0 +1,21 @@
+{
+  "name": "ng-input-highlighter",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
+  },
+  "main": "bundles/ng-input-highlighter.umd.js",
+  "module": "fesm5/ng-input-highlighter.js",
+  "es2015": "fesm2015/ng-input-highlighter.js",
+  "esm5": "esm5/ng-input-highlighter.js",
+  "esm2015": "esm2015/ng-input-highlighter.js",
+  "fesm5": "fesm5/ng-input-highlighter.js",
+  "fesm2015": "fesm2015/ng-input-highlighter.js",
+  "typings": "ng-input-highlighter.d.ts",
+  "metadata": "ng-input-highlighter.metadata.json",
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
+  }
+}

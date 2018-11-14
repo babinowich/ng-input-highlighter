@@ -1,0 +1,132 @@
+<br>
+<br>
+<div class="container">
+  <h1>Welcome to {{ title }}!</h1>
+</div>
+<div class="container">
+  <h2>Overview</h2>
+  <p>
+    This Angular library creates a rich-text input that decorates text with a designated css class without using separate div's, allowing normal html web interactions such as selecting, right-click,
+  </p>
+  <h2>Demo Using Local Analysis Highlighting Method (simple lookups)</h2>
+  <p>Providing an array of target words to look for and a corresponding css class to highlight for them. As the user types, the component will look for the target words after a 2 second period of inactivity. If no css class is provided, a default style with a background of a blue background will be used for all.</p>
+  <p>The text string will also be output if you'd like to that to be sent to the parent component.</p>
+  <lib-ng-input-highlighter [localAnalysis]="true" [targetItems]="targetItems"></lib-ng-input-highlighter>
+  <br>
+  <p>Use the following tool to play with the input target items that the demo component above will use in its local analysis as you type.</p>
+  <b>Current targetItem array</b>
+  <table class="table">
+    <tr>
+      <th>
+        text
+      </th>
+      <th>
+        css class
+      </th>
+    </tr>
+    <tr *ngFor="let item of targetItems">
+      <td>
+        {{ item.text }}
+      </td>
+      <td>
+        {{ item.css }}
+      </td>
+    </tr>
+  </table>
+</div>
+<div class="container">
+  <h2>Demo Using External Analysis (advanced parsing)</h2>
+  <p>Here the component will output the string of text in the box for analysis in its parent component, for example using IBM Watson Natural Language Understanding or Google Cloud Natural Language for entity, concept, or keyword extraction.</p>
+  <p>The parent service will need to parse the original output string either on its own or through an NLP service and combine identified targets into an analyzed input array of identified items with their start and end index. </p>
+  <lib-ng-input-highlighter [localAnalysis]="false" [targetItems]="analyzedItems" (currentText)="processText($event)"></lib-ng-input-highlighter>
+</div>
+<div class="container">
+  <h2>Inputs</h2>
+  <table class="table">
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>localAnalysis</td>
+      <td>boolean</td>
+      <td>true</td>
+      <td>set the analysis type, if true component will locally parse input text</td>
+    </tr>
+    <tr>
+      <td>targetItems</td>
+      <td>object[]</td>
+      <td></td>
+      <td>the target text items to highlight. Of type TargetItem. See below for schema.</td>
+    </tr>
+    <tr>
+      <td>regularClass</td>
+      <td>string</td>
+      <td>'regTxt'</td>
+      <td>optional class for input of style for regular text in box. CSS class must be defined in parent component </td>
+    </tr>  
+    <tr>
+      <td>caseSensitive</td>
+      <td>boolean</td>
+      <td>false</td>
+      <td>allow for option to select case sensitivity in local analysis</td>
+    </tr>      
+  </table>
+  <h2>Outputs</h2>
+  <table class="table">
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>currentText</td>
+      <td>string</td>
+      <td>the current text in the textarea will emit after a 2 second pause in typing</td>
+    </tr>
+  </table>
+  <h2>TargetItem Class</h2>
+  <div class="row">
+    <div class="col-xs-8">
+        <p>The targetItem class is required for each item in the targetItems array. CSS refers to the string of the class name that you would like to decorate your text targets with.</p>
+        <p>If using external analysis, supply the index location beginning and end of each text item in relation to the original text string.</p>
+      </div>
+      <div class="col-xs-4">
+      <pre class="prettyprint" style="margin:0px">
+  targetItem: {{ '{' }}
+    text: string,
+    css?: string,
+    location?: [number, number]
+  {{ '}' }}</pre>
+      </div>
+  </div>
+  <h2>Example Classes used in demo:</h2>
+  <div class="row">
+    <div class="col-xs-8">
+      <p>The targetItem class is required for each item in the targetItems array. CSS refers to the string of the class name that you would like to decorate your text targets with.</p>
+      <p>If using external analysis, supply the index location beginning and end of each text item in relation to the original text string.</p>
+    </div>
+    <div class="col-xs-4">
+<pre class="prettyprint"  style="margin:0px">
+  .good: {{ '{' }}
+      background-color:#60B515;
+      color: white;
+      margin: 0 .1em;
+      padding: 0.3em .3em;
+      border-radius: 4px
+  {{ '}' }}
+  .bad {{ '{' }}
+      background-color:red;
+      color: white;
+      margin: 0 .1em;
+      padding: 0.3em .3em;
+      border-radius: 4px
+  {{ '}' }}</pre>
+      </div>
+    </div>
+  <div style="width:450px">
+
+  </div>
+</div>

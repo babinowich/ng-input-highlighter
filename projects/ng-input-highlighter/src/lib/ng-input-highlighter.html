@@ -1,0 +1,16 @@
+<div #inputBox id="input-area" tabindex="0">
+  <div class="text-area">
+      <span 
+        #lastInput
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+        id="input-span" 
+        contenteditable
+        [innerHTML]="textHTMLstring"
+        [ngClass]="{'pending': responsePending}"
+        (input)="textChange($event.target.textContent)">
+      </span>
+      <span *ngIf="responsePending" style="margin-left:15px" class="spinner spinner-inline"></span>
+      <span (click)="focusInput()" class="blank-input"></span>
+  </div>
+  <div (click)="focusInput()" class="rest"></div>
+</div>
