@@ -1,5 +1,8 @@
 # ng-input-highlighter
 Rich-text input that decorates text with a designated css class
+** readme underconstruction **
+
+Checkout the [demo](https://ng-input-highlighter.firebaseapp.com/) 
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.3.
 
