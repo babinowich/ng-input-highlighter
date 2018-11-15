@@ -6,26 +6,39 @@
 <div class="container">
   <h2>Overview</h2>
   <p>
-    This Angular library creates a rich-text input that decorates text with a designated css class without using separate div's, allowing normal html web interactions such as selecting, right-click,
+    This Angular library creates a rich-text input that decorates text with a designated css class without using separate div's, allowing normal html web interactions such as selecting and right-click. The entire textbox is a contenteditable div with conjoined spans of text and empty spaces. 
   </p>
-  <h1>SITE UNDER CONSTRUCTION</h1>
+  <b>Key Features</b>
+  <br>
+  <em>Flexibility with Internal or External Parsing</em>
+  <p>Allow the Component to perform simple quick lookups and find indices of select target words or provide an array of items and indices for the component to decorate. This lets your parsing be as advanced as you'd like, using outputs from NLP APIs such as IBM Watson.</p>
+  <em>Use Normal CSS Classes For Decorations</em>
+  <p>The Component sets the targeted spans class to whatever class you want. Just give it the string name for the target, and it will set it. For examples of CSS used in the demo, checkout the bottom of the page.</p>
+  <em>Accessibility</em>
+  <p>While the Component is actually several divs and spans, it appears and functions as one. Clicks in the empty spaces brings the caret position to the end of the input naturally and bring focus to the entire textbox.</p>
+  <hr>
   <h2>Demo Using Local Analysis Highlighting Method (simple lookups)</h2>
   <p>Providing an array of target words to look for and a corresponding css class to highlight for them. As the user types, the component will look for the target words after a 2 second period of inactivity. If no css class is provided, a default style with a background of a blue background will be used for all.</p>
   <p>The text string will also be output if you'd like to that to be sent to the parent component.</p>
   <lib-ng-input-highlighter [localAnalysis]="true" [targetItems]="targetItems"></lib-ng-input-highlighter>
   <br>
-  <p>Use the following tool to play with the input target items that the demo component above will use in its local analysis as you type.</p>
-  <b>Current targetItem array</b>
-  <table class="table">
+  <p>Use the following tool to play with the input target items that the demo component above will use in its local analysis as you type. Start typing in the box for it to refresh and find the new set of target items.</p>
+  <form [formGroup]="itemForm" (ngSubmit)="submitTargetAdd()" id="reviewForm">
+  <table class="table" style="width:700px;display: block;margin-left: auto; margin-right: auto;">
     <tr>
-      <th>
+      <th style="width:50px">
+      </th>
+      <th style="width:400px">
         text
       </th>
-      <th>
+      <th style="width:250px">
         css class
       </th>
     </tr>
     <tr *ngFor="let item of targetItems">
+      <td class="buttonCell" (click)="removeTargetItem(item)">
+          <i class="fa fa-minus-circle"></i>
+      </td>
       <td>
         {{ item.text }}
       </td>
@@ -33,14 +46,43 @@
         {{ item.css }}
       </td>
     </tr>
+    <tr>
+      <td class="addButtonCell" (click)="addTargetItem()">
+        <i class="fa fa-plus-circle"></i>
+      </td>   
+      <td *ngIf="!toggleAdd">
+        Add new target item
+      </td> 
+      <td *ngIf="!toggleAdd">
+      </td>
+        <td *ngIf="toggleAdd" >
+          <mat-form-field>
+            <input matInput placeholder="enter item text" name="text" formControlName="text">
+          </mat-form-field>
+        </td> 
+        <td *ngIf="toggleAdd" >
+          <mat-form-field style="display:inline-block;width:220px">
+            <mat-select placeholder="select predefined class" formControlName="css" >
+              <mat-option value="good">good (green)</mat-option>
+              <mat-option value="bad">bad (red)</mat-option>
+              <mat-option value="happy">happy (yellow)</mat-option>
+              <mat-option value="sad">sad (blue)</mat-option>
+              <mat-option value="rainbow">rainbow</mat-option>
+            </mat-select>          
+          </mat-form-field>
+          <button [disabled]="!itemForm.valid" style="display:inline-block; margin-left:20px" (click)="submitTargetAdd()">Add</button>
+        </td>
+    </tr>
   </table>
+</form> 
+<hr>
 </div>
-<div class="container">
+<!-- <div class="container">
   <h2>Demo Using External Analysis (advanced parsing)</h2>
   <p>Here the component will output the string of text in the box for analysis in its parent component, for example using IBM Watson Natural Language Understanding or Google Cloud Natural Language for entity, concept, or keyword extraction.</p>
   <p>The parent service will need to parse the original output string either on its own or through an NLP service and combine identified targets into an analyzed input array of identified items with their start and end index. </p>
   <lib-ng-input-highlighter [localAnalysis]="false" [targetItems]="analyzedItems" (currentText)="processText($event)"></lib-ng-input-highlighter>
-</div>
+</div> -->
 <div class="container">
   <h2>Inputs</h2>
   <table class="table">
@@ -75,6 +117,7 @@
       <td>allow for option to select case sensitivity in local analysis</td>
     </tr>      
   </table>
+  <hr>
   <h2>Outputs</h2>
   <table class="table">
     <tr>
@@ -88,6 +131,7 @@
       <td>the current text in the textarea will emit after a 2 second pause in typing</td>
     </tr>
   </table>
+  <hr>
   <h2>TargetItem Class</h2>
   <div class="row">
     <div class="col-xs-8">
@@ -105,11 +149,7 @@
   </div>
   <h2>Example Classes used in demo:</h2>
   <div class="row">
-    <div class="col-xs-8">
-      <p>The targetItem class is required for each item in the targetItems array. CSS refers to the string of the class name that you would like to decorate your text targets with.</p>
-      <p>If using external analysis, supply the index location beginning and end of each text item in relation to the original text string.</p>
-    </div>
-    <div class="col-xs-4">
+    <div class="col-xs-6">
 <pre class="prettyprint"  style="margin:0px">
   .good: {{ '{' }}
       background-color:#60B515;
@@ -124,10 +164,59 @@
       margin: 0 .1em;
       padding: 0.3em .3em;
       border-radius: 4px
-  {{ '}' }}</pre>
+  {{ '}' }}
+  .happy {{ '{' }}
+    background-color:#fce116;
+    color: black;
+    margin: 0 .1em;
+    padding: 0.3em .3em !important;
+    border-radius: 4px
+  {{ '}' }}
+  .sad {{ '{' }}
+    background-color:#556eed;
+    color: white;
+    margin: 0 .1em;
+    padding: 0.3em .3em !important;
+    border-radius: 4px
+  {{ '}' }}
+
+</pre>
+      </div>
+      <div class="col-xs-6">
+<pre class="prettyprint"  style="margin:0px">
+  .rainbow {{ '{' }} 
+    margin: 0 .1em;
+    padding: 0.3em .3em !important;
+    border-radius: 4px;
+    color: black;
+    background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+    background-size: 1800% 1800%;
+  
+  -webkit-animation: rainbowAnimation 18s ease infinite;
+  -z-animation: rainbowAnimation 18s ease infinite;
+  -o-animation: rainbowAnimation 18s ease infinite;
+    animation: rainbowAnimation 18s ease infinite;}
+  
+  @-webkit-keyframes rainbowAnimation {{ '{' }}
+      0%{{ '{' }}background-position:0% 82%{{ '}' }}
+      50%{{ '{' }}background-position:100% 19%{{ '}' }}
+      100%{{ '{' }}background-position:0% 82%{{ '}' }}
+  }
+  @-moz-keyframes rainbowAnimation {{ '{' }}
+      0%{{ '{' }}background-position:0% 82%{{ '}' }}
+      50%{{ '{' }}background-position:100% 19%{{ '}' }}
+      100%{{ '{' }}background-position:0% 82%{{ '}' }}
+  }
+  @-o-keyframes rainbowAnimation {{ '{' }}
+      0%{{ '{' }}background-position:0% 82%{{ '}' }}
+      50%{{ '{' }}background-position:100% 19%{{ '}' }}
+      100%{{ '{' }}background-position:0% 82%{{ '}' }}
+  }
+  @keyframes rainbowAnimation {{ '{' }} 
+      0%{{ '{' }}background-position:0% 82%{{ '}' }}
+      50%{{ '{' }}background-position:100% 19%{{ '}' }}
+      100%{{ '{' }}background-position:0% 82%{{ '}' }}
+{{ '}' }}</pre>
       </div>
     </div>
-  <div style="width:450px">
-
-  </div>
 </div>

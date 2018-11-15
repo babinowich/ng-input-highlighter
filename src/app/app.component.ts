@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnChanges } from '@angular/core';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 
 @Component({
   selector: 'app-root',
@@ -19,13 +20,48 @@ export class AppComponent {
     }
   ]
 
+  public itemForm: FormGroup
+
+
   public analyzedItems = []
+  public toggleAdd = false
+  public addError = false
+  public fullyFilled = false
+
+  constructor(private _fb: FormBuilder) {
+    this.itemForm = this._fb.group({
+      text: ['', Validators.required],
+      css: ['', Validators.required]
+    })
+  }
 
   processText(event) {
     console.log('process text!', event)
     this.analyzedItems = localAnalysis(this.targetItems, event)
     console.log(this.analyzedItems)
   }
+
+  removeTargetItem(event) {
+    for (let i = 0;  i < this.targetItems.length; i++) {
+      if (event.text === this.targetItems[i].text) {
+        this.targetItems.splice(i, 1)
+      }
+    }
+    console.log(this.targetItems)
+  }
+
+  addTargetItem() {
+    this.toggleAdd = true
+  }
+
+  submitTargetAdd() {
+    let newItem = this.itemForm.value
+    this.targetItems.push(newItem)
+    this.toggleAdd = false
+    // this.itemForm.value.text = ''
+    // this.itemForm.value.css = ''
+  }
+
 }
 
 function localAnalysis(searchTargets, str, caseSensitive?) {

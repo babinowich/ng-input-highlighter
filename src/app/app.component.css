@@ -1,0 +1,8 @@
+.buttonCell:hover {
+    color:red;
+    cursor: pointer;
+}
+.addButtonCell:hover {
+    color:green;
+    cursor: pointer;
+}

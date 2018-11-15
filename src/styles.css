@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 .good {
     background-color:#60B515;
@@ -15,3 +16,51 @@
     padding: 0.3em .3em !important;
     border-radius: 4px
 }
+.happy {
+    background-color:#fce116;
+    color: black;
+    margin: 0 .1em;
+    padding: 0.3em .3em !important;
+    border-radius: 4px
+}
+.sad {
+    background-color:#556eed;
+    color: white;
+    margin: 0 .1em;
+    padding: 0.3em .3em !important;
+    border-radius: 4px
+}
+
+.rainbow { 
+    margin: 0 .1em;
+    padding: 0.3em .3em !important;
+    border-radius: 4px;
+    color: black;
+    background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+    background-size: 1800% 1800%;
+  
+  -webkit-animation: rainbowAnimation 18s ease infinite;
+  -z-animation: rainbowAnimation 18s ease infinite;
+  -o-animation: rainbowAnimation 18s ease infinite;
+    animation: rainbowAnimation 18s ease infinite;}
+  
+  @-webkit-keyframes rainbowAnimation {
+      0%{background-position:0% 82%}
+      50%{background-position:100% 19%}
+      100%{background-position:0% 82%}
+  }
+  @-moz-keyframes rainbowAnimation {
+      0%{background-position:0% 82%}
+      50%{background-position:100% 19%}
+      100%{background-position:0% 82%}
+  }
+  @-o-keyframes rainbowAnimation {
+      0%{background-position:0% 82%}
+      50%{background-position:100% 19%}
+      100%{background-position:0% 82%}
+  }
+  @keyframes rainbowAnimation { 
+      0%{background-position:0% 82%}
+      50%{background-position:100% 19%}
+      100%{background-position:0% 82%}
+  }
