@@ -24,4 +24,5 @@ export declare class NgInputHighlighterComponent implements OnInit, OnChanges, A
     constructExternally(): void;
     focusInput(): void;
     placeCaretAtEnd(el: any): void;
+    selectAll(): void;
 }

@@ -16,8 +16,7 @@ import { TargetItem } from './classes/targetItems.class';
 
 export class NgInputHighlighterComponent implements OnInit, OnChanges, AfterViewInit {
 
-  @Input() regularClass: string = null // optional class for input of style for regular text in box
-  // @Input() targetTextArray: Array<TargetArrayItem> = []; // analysis outside component: need to define schema
+  @Input() regularClass = 'regularText' // optional class for input of style for regular text in box
   @Input() targetItems: Array<TargetItem> = []; // analysis inside component: array of items to find
   @Input() localAnalysis = true
   @Input() caseSensitive = false; // allow for option to select case sensitivity- default to off
@@ -57,18 +56,11 @@ export class NgInputHighlighterComponent implements OnInit, OnChanges, AfterView
   ngOnChanges(changes: SimpleChanges): void {
     if ((this.targetItems.length > 0) && (!this.localAnalysis)) {
       if (changes.targetItems) {
-        console.log(changes)
-        // if (changes.targetItems.isFirstChange) {
-        //   console.log(changes)
-        //   console.log('selected to do external analysis strategy')
-        // } else {
-          // Response came back from service
-          this.constructExternally()
-          setTimeout(() => {
-            this.responsePending = false
-            this.focusInput()
-          }, 500)
-        // }
+        this.constructExternally()
+        setTimeout(() => {
+          this.responsePending = false
+          this.focusInput()
+        }, 500)
       }
     }
   }
@@ -93,37 +85,40 @@ export class NgInputHighlighterComponent implements OnInit, OnChanges, AfterView
 
   // Method to construct the html string from an input text array without locations
   constructLocally() {
-    const regularTextClass = this.regularClass ? this.regularClass : 'regTxt';
-    const beginning = '<span class="' + regularTextClass + '">';
+    // const regularTextClass = this.regularClass ? this.regularClass : 'regTxt';
+    const beginning = '<span class="' + this.regularClass + '">';
     const analysisOutput = localAnalysis(this.targetItems, this.tempString, this.caseSensitive);
     this.textHTMLstring = beginning + analysisOutput + ' </span>';
   }
 
   // Method to construct the html string from an input text array with locations
   constructExternally() {
-    console.log(this.targetItems, this.tempString)
-    const regularTextClass = this.regularClass ? this.regularClass : 'regTxt'
-    const beginning = '<span class="' + regularTextClass + '">'
+    const beginning = '<span class="' + this.regularClass + '">';
     let locationChecker = true
     const erroredItems = []
-    for (const item of this.targetItems) {
-      if (!item.location) {
-        erroredItems.push(item)
-        locationChecker = false
-      }
-    }
-    if (locationChecker) {
-      const analysisOutput = makeString(this.targetItems, this.tempString)
-      this.textHTMLstring = beginning + analysisOutput + ' </span>'
+    if (this.targetItems.length === 0) {
+      this.textHTMLstring = beginning + this.tempString + ' </span>'
     } else {
-      let erroredItemsText = ''
-      for (const item of erroredItems) {
-        erroredItemsText = erroredItemsText + item.text + '  '
+      for (const item of this.targetItems) {
+        if (!item.location) {
+          erroredItems.push(item)
+          locationChecker = false
+        }
       }
-      this.textHTMLstring =
-        'An error occured.  The following items did not have a valid identified index location: ' + erroredItemsText
-        + 'Either provide proper index locations of each item to be highlighted or set localAnalysis to true.'
+      if (locationChecker) {
+        const analysisOutput = makeString(this.targetItems, this.tempString)
+        this.textHTMLstring = beginning + analysisOutput + ' </span>'
+      } else {
+        let erroredItemsText = ''
+        for (const item of erroredItems) {
+          erroredItemsText = erroredItemsText + item.text + '  '
+        }
+        this.textHTMLstring =
+          'An error occured.  The following items did not have a valid identified index location: ' + erroredItemsText
+          + 'Either provide proper index locations of each item to be highlighted or set localAnalysis to true.'
+      }
     }
+
 
   }
 
@@ -152,6 +147,10 @@ export class NgInputHighlighterComponent implements OnInit, OnChanges, AfterView
       sel.addRange(range)
     }
   }
+
+  selectAll() {
+    document.execCommand('selectAll', false, null)
+  }
 }
 
 
@@ -171,7 +170,7 @@ function localAnalysis(searchTargets, str, caseSensitive) {
         return 'An error occurred. There appears to be no input search string.'
     }
     while ((index = str.indexOf(item.text, startIndex)) > -1) {
-      let indexItem = {
+      const indexItem = {
         text: item.text,
         location: [index, index + searchStrLen],
         css: item.css
@@ -180,10 +179,15 @@ function localAnalysis(searchTargets, str, caseSensitive) {
       startIndex = index + searchStrLen;
     }
   }
+  // console.log(output.length)
+  if (output.length === 0) {
+    return str
+  } else {
+    return makeString(output, str)
+  }
   // output.sort(function(a, b) {
   //   return a.location[0] - b.location[0]
   // })
-  return makeString(output, str)
 }
 
 function makeString(searchResults, original_text) {

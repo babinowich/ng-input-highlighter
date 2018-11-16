@@ -43,3 +43,12 @@
 .pending {
 	opacity: 0.3;
 }
+
+::selection {
+	background: #444782; /* WebKit/Blink Browsers */
+	color:white;
+}
+::-moz-selection {
+	background: #444782; /* WebKit/Blink Browsers */
+	color:white;
+}

@@ -1,31 +1,51 @@
 # ng-input-highlighter
 Rich-text input that decorates text with a designated css class
-** readme underconstruction **
 
 Checkout the [demo](https://ng-input-highlighter.firebaseapp.com/) 
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.3.
+Key Features
+Flexibility with Internal or External Parsing
+Allow the Component to perform simple quick lookups and find indices of select target words or provide an array of items and indices for the component to decorate. This lets your parsing be as advanced as you'd like, using outputs from NLP APIs such as IBM Watson.
 
-## Development server
+Use Normal CSS Classes For Decorations
+The Component sets the targeted spans class to whatever class you want. Just give it the string name for the target, and it will set it. For examples of CSS used in the demo, checkout the bottom of the page.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Accessibility
+While the Component is actually several divs and spans, it appears and functions as one. Clicks in the empty spaces brings the caret position to the end of the input naturally and bring focus to the entire textbox.
 
-## Code scaffolding
+## Importing
+In your app.module.ts or whatever module you are using it in:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```import { NgInputHighlighterModule } from 'ng-input-highlighter';```
 
-## Build
+Add to your imports array:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+``` imports: [ NgInputHighlighterModule ] ```
 
-## Running unit tests
+And then you have two options- for local analysis, meaning letting the component look for a defined set of words, place the component in your html with:
+```   <lib-ng-input-highlighter [localAnalysis]="true" [targetItems]="targetItems"></lib-ng-input-highlighter>```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+With the targetItems array input as ```targetItems: object[]```	
 
-## Running end-to-end tests
+With objects as:   
+    targetItem: {
+        text: string,
+        css: string
+    } 
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+If you choose to do external analysis, meaning letting a separate parsing service look for specific entities, place the component in your html with:
+```   <lib-ng-input-highlighter [localAnalysis]="false" [targetItems]="targetItems"></lib-ng-input-highlighter>```
 
-## Further help
+With objects as:   
+    targetItem: {
+        text: string,
+        css: string,
+        location: [start, end]
+    } 
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+For more information on use, check out the [demo](https://ng-input-highlighter.firebaseapp.com/) 
+
+## To run the local demo app
+
+Run `npm install` then run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

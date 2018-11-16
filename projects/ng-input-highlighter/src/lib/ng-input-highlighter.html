@@ -9,8 +9,8 @@
         [ngClass]="{'pending': responsePending}"
         (input)="textChange($event.target.textContent)">
       </span>
-      <span *ngIf="responsePending" style="margin-left:15px" class="spinner spinner-inline"></span>
-      <span (click)="focusInput()" class="blank-input"></span>
+      <span *ngIf="responsePending"><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></span>
+      <span (click)="focusInput()"  (dblclick)="selectAll()" class="blank-input"></span>
   </div>
-  <div (click)="focusInput()" class="rest"></div>
+  <div (click)="focusInput()" (dblclick)="selectAll()" class="rest"></div>
 </div>
