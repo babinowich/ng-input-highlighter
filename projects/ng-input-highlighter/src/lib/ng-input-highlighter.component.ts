@@ -19,6 +19,9 @@ export class NgInputHighlighterComponent implements OnInit, OnChanges, AfterView
   @Input() regularClass = 'regularText' // optional class for input of style for regular text in box
   @Input() targetItems: Array<TargetItem> = []; // analysis inside component: array of items to find
   @Input() localAnalysis = true
+  @Input() boxHeight = 'M'
+  // @Input() highContrast = true
+  @Input() initFocus = true // allow for option to focus on component text box initially, recommended for accessibility
   @Input() caseSensitive = false; // allow for option to select case sensitivity- default to off
   @Output() currentText = new EventEmitter<string>(); // current text string, will output for analysis or other work outside
 
@@ -30,6 +33,7 @@ export class NgInputHighlighterComponent implements OnInit, OnChanges, AfterView
   public textArray: Array<TargetArrayItem> = []
   public textHTMLstring: string
   public tempString = ''
+  public boxSize: String
 
   constructor(private renderer: Renderer2) {
   }
@@ -51,6 +55,18 @@ export class NgInputHighlighterComponent implements OnInit, OnChanges, AfterView
         }, 500)
       }
     })
+
+    if (this.boxHeight === 'XS') {
+      this.boxSize = 'xsmall'
+    } else if (this.boxHeight === 'S') {
+      this.boxSize = 'small'
+    } else if (this.boxHeight === 'L') {
+      this.boxSize = 'large'
+    } else if (this.boxHeight === 'XL') {
+      this.boxSize = 'xlarge'
+    } else {
+      this.boxSize = 'medium'
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -74,7 +90,9 @@ export class NgInputHighlighterComponent implements OnInit, OnChanges, AfterView
       this.renderer.removeClass(this.inputBox.nativeElement, 'focused');
     });
     // Focus the caret at the end of the box
-    this.focusInput();
+    if (this.initFocus) {
+      this.focusInput();
+    }
     console.log('targetItems', this.targetItems);
   }
   // Method called upon a keystroke to begin the process of waiting for a 2 second pause in keystrokes
@@ -155,12 +173,6 @@ export class NgInputHighlighterComponent implements OnInit, OnChanges, AfterView
 
 
 function localAnalysis(searchTargets, str, caseSensitive) {
-  if (caseSensitive) {
-    str = str.toLowerCase()
-    for (const item of searchTargets) {
-      item.text = item.text.toLowerCase()
-    }
-  }
   const output = []
   for (const item of searchTargets) {
     let startIndex = 0
@@ -169,9 +181,18 @@ function localAnalysis(searchTargets, str, caseSensitive) {
     if (searchStrLen === 0) {
         return 'An error occurred. There appears to be no input search string.'
     }
-    while ((index = str.indexOf(item.text, startIndex)) > -1) {
+    let searchingString
+    let searchingText
+    if (!caseSensitive) {
+      searchingString = str.toLowerCase()
+      searchingText = item.text.toLowerCase()
+    } else {
+      searchingString = str
+      searchingText = item.text
+    }
+    while ((index = searchingString.indexOf(searchingText, startIndex)) > -1) {
       const indexItem = {
-        text: item.text,
+        text: str.substring(index, index + searchStrLen),
         location: [index, index + searchStrLen],
         css: item.css
       }
@@ -179,15 +200,11 @@ function localAnalysis(searchTargets, str, caseSensitive) {
       startIndex = index + searchStrLen;
     }
   }
-  // console.log(output.length)
   if (output.length === 0) {
     return str
   } else {
     return makeString(output, str)
   }
-  // output.sort(function(a, b) {
-  //   return a.location[0] - b.location[0]
-  // })
 }
 
 function makeString(searchResults, original_text) {

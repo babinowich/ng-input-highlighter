@@ -58,8 +58,6 @@ export class AppComponent {
     let newItem = this.itemForm.value
     this.targetItems.push(newItem)
     this.toggleAdd = false
-    // this.itemForm.value.text = ''
-    // this.itemForm.value.css = ''
   }
 
 }

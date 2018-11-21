@@ -6,3 +6,22 @@
     color:green;
     cursor: pointer;
 }
+#gitIcon {
+    display: inline-block;
+    font-size:30px;
+    margin-left:7px;
+    cursor: pointer;
+}
+#gitIcon:hover {
+    color:#556EED;
+}
+#itemForm{
+    margin-top:16px;
+}
+
+.attention{
+    margin: 30px 50px 0px 50px;
+    padding: 25px;
+    background-color:#EFF1FF;
+    border-radius:18px;
+}

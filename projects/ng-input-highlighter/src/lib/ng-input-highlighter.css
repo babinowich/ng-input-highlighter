@@ -3,11 +3,26 @@
 	margin-top:10px;
 	background-color: #F3F6FA;
 	border-radius: 5px;
-	height:250px;
+	/* height:250px; */
 	width:100%;
 	border: 1px solid #E3ECF7;
 	overflow:hidden;
 	padding: 10px;
+}
+.xsmall {
+	height: 41px;
+}
+.small {
+	height: 100px;
+}
+.medium {
+	height: 250px;
+}
+.large {
+	height: 500px;
+}
+.xlarge {
+	height: 1000px;
 }
 
 .text-area{

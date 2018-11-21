@@ -6,6 +6,8 @@ export declare class NgInputHighlighterComponent implements OnInit, OnChanges, A
     regularClass: string;
     targetItems: Array<TargetItem>;
     localAnalysis: boolean;
+    boxHeight: string;
+    initFocus: boolean;
     caseSensitive: boolean;
     currentText: EventEmitter<string>;
     lastInput: ElementRef;
@@ -15,6 +17,7 @@ export declare class NgInputHighlighterComponent implements OnInit, OnChanges, A
     textArray: Array<TargetArrayItem>;
     textHTMLstring: string;
     tempString: string;
+    boxSize: String;
     constructor(renderer: Renderer2);
     ngOnInit(): void;
     ngOnChanges(changes: SimpleChanges): void;

@@ -1,88 +1,100 @@
 <br>
-<br>
-<div class="container">
-  <h1>Welcome to {{ title }}!</h1>
+<div class="container" style="margin-bottom:10px">
+  <h1 style="display: inline-block">ng-input-highlighter</h1>
+  <a style="color:black" target="_blank" href="https://github.com/babinowich/ng-input-highlighter"><i id="gitIcon" class="fa fa-github" aria-hidden="true"></i></a>
+  <a style="display: inline-block; margin-left: 10px" href="https://badge.fury.io/js/ng-input-highlighter"><img src="https://badge.fury.io/js/ng-input-highlighter.svg" alt="npm version" height="18"></a>
 </div>
 <div class="container">
-  <h2>Overview</h2>
   <p>
     This Angular library creates a rich-text input that decorates text with a designated css class without using separate div's, allowing normal html web interactions such as selecting and right-click. The entire textbox is a contenteditable div with conjoined spans of text and empty spaces. 
   </p>
   <b>Key Features</b>
+  <div class="container" style="padding-top:7px; padding-right:140px">
+    <em>Flexibility with Local or External Parsing</em>
+    <p>Allow the Component to perform simple quick lookups and find indices of select target words or provide an array of items and indices for the component to decorate. This lets your parsing be as advanced as you'd like, using outputs from NLP APIs such as IBM Watson.</p>
+    <em>Use Normal CSS Classes for Decorations</em>
+    <p>The Component sets the targeted spans class to whatever class you want. Just give it the string name for the target, and it will set it. For examples of CSS used in the demo, checkout the bottom of the page.</p>
+    <em>Normal HTML Accessibility</em>
+    <p>While the Component is actually several divs and spans, it appears and functions as one. Clicking and dragging allows for normal fluid selection. Clicks in the empty spaces brings the caret position to the end of the input naturally and bring focus to the entire textbox. Double clicks inside the textbox select all text.</p>
+  </div>
+  <h2>Demo of Local Parsing Method for Simple Lookups</h2>
+  <p>Providing an array of target words to look for and a corresponding css class to highlight for them. As the user types, the component will look for the target words after a 2 second period of inactivity.</p>
+  <p>Use the following tool to play with the input target items that the demo component above will use in its local analysis as you type. Enter a string you'd like decorated in 'text' and select one of the preconfigured css classes to highlight it with. Start typing in the box for it to refresh and find the new set of target items. Case sensitivity is turned off for this box.</p>
+  <div class="row">
+    <div class="col-xs-7">
+        <lib-ng-input-highlighter [localAnalysis]="true" [targetItems]="targetItems"></lib-ng-input-highlighter>
+    </div>
+    <div class="col-xs-5">
+      <div style="margin-top:10px">
+        <b>Add or remove target items</b>
+        <form [formGroup]="itemForm" (ngSubmit)="submitTargetAdd()" id="itemForm">
+          <table class="table" style="width:700px;display: block;margin-left: auto; margin-right: auto;">
+            <tr>
+              <th style="width:50px">
+              </th>
+              <th style="width:400px">
+                text
+              </th>
+              <th style="width:250px">
+                decorator class
+              </th>
+            </tr>
+            <tr *ngFor="let item of targetItems">
+              <td class="buttonCell" (click)="removeTargetItem(item)">
+                  <i class="fa fa-minus-circle"></i>
+              </td>
+              <td>
+                {{ item.text }}
+              </td>
+              <td>
+                {{ item.css }}
+              </td>
+            </tr>
+            <tr>
+              <td class="addButtonCell" (click)="addTargetItem()">
+                <i class="fa fa-plus-circle"></i>
+              </td>   
+              <td *ngIf="!toggleAdd">
+                Add new target item
+              </td> 
+              <td *ngIf="!toggleAdd">
+              </td>
+              <td *ngIf="toggleAdd" >
+                <mat-form-field>
+                  <input matInput placeholder="enter item text" name="text" formControlName="text">
+                </mat-form-field>
+              </td> 
+              <td *ngIf="toggleAdd" >
+                <mat-form-field style="display:inline-block;width:220px">
+                  <mat-select placeholder="select predefined class" formControlName="css" >
+                    <mat-option value="good">good (green)</mat-option>
+                    <mat-option value="bad">bad (red)</mat-option>
+                    <mat-option value="happy">happy (yellow)</mat-option>
+                    <mat-option value="sad">sad (blue)</mat-option>
+                    <mat-option value="rainbow">rainbow</mat-option>
+                  </mat-select>          
+                </mat-form-field>
+                <button [disabled]="!itemForm.valid" style="display:inline-block; margin-left:20px" (click)="submitTargetAdd()">Add</button>
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>       
+    </div>
+  </div>
+  <div class="attention">
+    <b>Decorator Class Tips!</b>
+    <p>Remember- these css classes are just illustrative! The component takes in a string name for a css class and applies it to the identified target segment. Add your own class into your app's root component to decorate the text however you'd like.</p>
+      <p>If no css class is provided, a default style with a background of a blue background will be used for all. The text string will also be output if you'd like to that to be sent to the parent component.</p>
+      <p>If you want to use the demo's css classes, scroll to the bottom for the css used above.</p>
+  </div>
   <br>
-  <em>Flexibility with Internal or External Parsing</em>
-  <p>Allow the Component to perform simple quick lookups and find indices of select target words or provide an array of items and indices for the component to decorate. This lets your parsing be as advanced as you'd like, using outputs from NLP APIs such as IBM Watson.</p>
-  <em>Use Normal CSS Classes For Decorations</em>
-  <p>The Component sets the targeted spans class to whatever class you want. Just give it the string name for the target, and it will set it. For examples of CSS used in the demo, checkout the bottom of the page.</p>
-  <em>Accessibility</em>
-  <p>While the Component is actually several divs and spans, it appears and functions as one. Clicks in the empty spaces brings the caret position to the end of the input naturally and bring focus to the entire textbox.</p>
-  <hr>
-  <h2>Demo Using Local Analysis Highlighting Method (simple lookups)</h2>
-  <p>Providing an array of target words to look for and a corresponding css class to highlight for them. As the user types, the component will look for the target words after a 2 second period of inactivity. If no css class is provided, a default style with a background of a blue background will be used for all.</p>
-  <p>The text string will also be output if you'd like to that to be sent to the parent component.</p>
-  <lib-ng-input-highlighter [localAnalysis]="true" [targetItems]="targetItems"></lib-ng-input-highlighter>
-  <br>
-  <p>Use the following tool to play with the input target items that the demo component above will use in its local analysis as you type. Start typing in the box for it to refresh and find the new set of target items.</p>
-  <form [formGroup]="itemForm" (ngSubmit)="submitTargetAdd()" id="reviewForm">
-  <table class="table" style="width:700px;display: block;margin-left: auto; margin-right: auto;">
-    <tr>
-      <th style="width:50px">
-      </th>
-      <th style="width:400px">
-        text
-      </th>
-      <th style="width:250px">
-        css class
-      </th>
-    </tr>
-    <tr *ngFor="let item of targetItems">
-      <td class="buttonCell" (click)="removeTargetItem(item)">
-          <i class="fa fa-minus-circle"></i>
-      </td>
-      <td>
-        {{ item.text }}
-      </td>
-      <td>
-        {{ item.css }}
-      </td>
-    </tr>
-    <tr>
-      <td class="addButtonCell" (click)="addTargetItem()">
-        <i class="fa fa-plus-circle"></i>
-      </td>   
-      <td *ngIf="!toggleAdd">
-        Add new target item
-      </td> 
-      <td *ngIf="!toggleAdd">
-      </td>
-        <td *ngIf="toggleAdd" >
-          <mat-form-field>
-            <input matInput placeholder="enter item text" name="text" formControlName="text">
-          </mat-form-field>
-        </td> 
-        <td *ngIf="toggleAdd" >
-          <mat-form-field style="display:inline-block;width:220px">
-            <mat-select placeholder="select predefined class" formControlName="css" >
-              <mat-option value="good">good (green)</mat-option>
-              <mat-option value="bad">bad (red)</mat-option>
-              <mat-option value="happy">happy (yellow)</mat-option>
-              <mat-option value="sad">sad (blue)</mat-option>
-              <mat-option value="rainbow">rainbow</mat-option>
-            </mat-select>          
-          </mat-form-field>
-          <button [disabled]="!itemForm.valid" style="display:inline-block; margin-left:20px" (click)="submitTargetAdd()">Add</button>
-        </td>
-    </tr>
-  </table>
-</form> 
-<hr>
 </div>
-<!-- <div class="container">
-  <h2>Demo Using External Analysis (advanced parsing)</h2>
-  <p>Here the component will output the string of text in the box for analysis in its parent component, for example using IBM Watson Natural Language Understanding or Google Cloud Natural Language for entity, concept, or keyword extraction.</p>
-  <p>The parent service will need to parse the original output string either on its own or through an NLP service and combine identified targets into an analyzed input array of identified items with their start and end index. </p>
-  <lib-ng-input-highlighter [localAnalysis]="false" [targetItems]="analyzedItems" (currentText)="processText($event)"></lib-ng-input-highlighter>
-</div> -->
+<div class="container">
+  <h2>Walkthrough to Using External Parsing for Advanced Lookups</h2>
+  <p>The component outputs the string of text in the box for analysis in its parent component after a two second pause in typing, allowing the use of an external NLP parsing service such as <a href="https://www.ibm.com/watson/services/natural-language-understanding/" target="_blank">IBM Watson Natural Language Understanding</a> or <a href="https://cloud.google.com/natural-language/" target="_blank">Google Cloud Natural Language</a> for entity, concept, or keyword extraction.</p>
+  <p>The parent service will need to parse the original output string either on its own and combine identified targets into an analyzed input array of identified items with their start and end index per the TargetItem Class. The location attribute is not optional if localAnalysis is set to false. If any of the targetItem array items do not have a location with a proper start and end index, the textbox will display an error message letting you know which items do not have an index.</p>
+</div>
 <div class="container">
   <h2>Inputs</h2>
   <table class="table">
@@ -114,10 +126,27 @@
       <td>caseSensitive</td>
       <td>boolean</td>
       <td>false</td>
-      <td>allow for option to select case sensitivity in local analysis</td>
-    </tr>      
+      <td>allow for option to select case sensitivity in local parsing</td>
+    </tr>
+    <tr>
+      <td>initFocus</td>
+      <td>boolean</td>
+      <td>true</td>
+      <td>auto focus the cursor on component initialization</td>
+    </tr>
+    <tr>
+      <td>boxHeight</td>
+      <td>string</td>
+      <td>M</td>
+      <td>set box height: XS = 37px, one line height; S = 100px; M = 250px; L = 500px; XL = 1000px</td>
+    </tr>
+    <!-- <tr>
+      <td>highContrast</td>
+      <td>boolean</td>
+      <td>true</td>
+      <td>for visability: if true- text selections will appear a darker highlighted color; if false- will use browser default baby blue</td>
+    </tr>        -->
   </table>
-  <hr>
   <h2>Outputs</h2>
   <table class="table">
     <tr>
@@ -131,7 +160,6 @@
       <td>the current text in the textarea will emit after a 2 second pause in typing</td>
     </tr>
   </table>
-  <hr>
   <h2>TargetItem Class</h2>
   <div class="row">
     <div class="col-xs-8">
@@ -220,3 +248,5 @@
       </div>
     </div>
 </div>
+<br>
+<br>
