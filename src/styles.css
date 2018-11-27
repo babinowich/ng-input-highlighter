@@ -68,3 +68,37 @@ body {
       50%{background-position:100% 19%}
       100%{background-position:0% 82%}
   }
+
+  .customPrint {
+      background-color:transparent;
+      border: none;
+      margin: 0px;
+      padding: 5px 0px 0px 30px;
+      color:white;
+  }
+
+  .customPrintContainer {
+      background-color: #000;
+      border-radius: 8px;
+      margin: 7px 0px 0px;
+      padding: 13px;
+      color:white;
+      font-family: Menlo,Monaco,Consolas,"Courier New",monospace
+  }
+
+  .fancy {
+    font-family: Luminari, fantasy;
+    color:green;
+  }
+
+  .codePill {
+      float:right;
+      padding:6px;
+      background-color:#E3E6EA;
+      border-radius:10px;
+      transition: 0.5s all;
+      cursor: pointer;
+  }
+  .codePill:hover {
+    background-color: #A5A7AA;
+  }
