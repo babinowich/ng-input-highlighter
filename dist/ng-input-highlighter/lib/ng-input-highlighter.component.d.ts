@@ -3,10 +3,12 @@ import { TargetArrayItem } from './classes/targetTextItem.class';
 import { TargetItem } from './classes/targetItems.class';
 export declare class NgInputHighlighterComponent implements OnInit, OnChanges, AfterViewInit {
     private renderer;
-    regularClass: string;
     targetItems: Array<TargetItem>;
     localAnalysis: boolean;
     boxHeight: string;
+    fontClass: string;
+    boxClass: string;
+    boxFocus: string;
     initFocus: boolean;
     caseSensitive: boolean;
     currentText: EventEmitter<string>;

@@ -16,11 +16,13 @@ import { TargetItem } from './classes/targetItems.class';
 
 export class NgInputHighlighterComponent implements OnInit, OnChanges, AfterViewInit {
 
-  @Input() regularClass = 'regularText' // optional class for input of style for regular text in box
   @Input() targetItems: Array<TargetItem> = []; // analysis inside component: array of items to find
   @Input() localAnalysis = true
   @Input() boxHeight = 'M'
   // @Input() highContrast = true
+  @Input() fontClass = 'regularText' // optional class for input of style for regular text in box
+  @Input() boxClass = 'none'
+  @Input() boxFocus = 'focused'
   @Input() initFocus = true // allow for option to focus on component text box initially, recommended for accessibility
   @Input() caseSensitive = false; // allow for option to select case sensitivity- default to off
   @Output() currentText = new EventEmitter<string>(); // current text string, will output for analysis or other work outside
@@ -84,10 +86,10 @@ export class NgInputHighlighterComponent implements OnInit, OnChanges, AfterView
   ngAfterViewInit() {
     // Add event listeners to the DOM elements after rendered, allowing for box-border
     this.renderer.listen(this.lastInput.nativeElement, 'focus', () => {
-      this.renderer.addClass(this.inputBox.nativeElement, 'focused');
+      this.renderer.addClass(this.inputBox.nativeElement, this.boxFocus);
     });
     this.renderer.listen(this.lastInput.nativeElement, 'blur', () => {
-      this.renderer.removeClass(this.inputBox.nativeElement, 'focused');
+      this.renderer.removeClass(this.inputBox.nativeElement, this.boxFocus);
     });
     // Focus the caret at the end of the box
     if (this.initFocus) {
@@ -104,14 +106,14 @@ export class NgInputHighlighterComponent implements OnInit, OnChanges, AfterView
   // Method to construct the html string from an input text array without locations
   constructLocally() {
     // const regularTextClass = this.regularClass ? this.regularClass : 'regTxt';
-    const beginning = '<span class="' + this.regularClass + '">';
+    const beginning = '<span class="' + this.fontClass + '">';
     const analysisOutput = localAnalysis(this.targetItems, this.tempString, this.caseSensitive);
     this.textHTMLstring = beginning + analysisOutput + ' </span>';
   }
 
   // Method to construct the html string from an input text array with locations
   constructExternally() {
-    const beginning = '<span class="' + this.regularClass + '">';
+    const beginning = '<span class="' + this.fontClass + '">';
     let locationChecker = true
     const erroredItems = []
     if (this.targetItems.length === 0) {

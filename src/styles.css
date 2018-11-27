@@ -1,8 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
+/*IBM Custom Fonts */
+@font-face {
+    font-family: PlexRegular;
+    src: url('assets/IBMFONTS/IBMPlexSans-Regular.woff') format('woff'), url('assets/IBMFONTS/IBMPlexSans-Regular.ttf') format('ttf'), url('assets/IBMFONTS/IBMPlexSans-Regular.otf') format('otf');
+}
+@font-face {
+    font-family: PlexLight;
+    src: url('assets/IBMFONTS/IBMPlexSans-Light.woff') format('woff'), url('assets/IBMFONTS/IBMPlexSans-Light.ttf') format('ttf'), url('assets/IBMFONTS/IBMPlexSans-Light.otf') format('otf');
+}
+@font-face {
+    font-family: PlexItalic;
+    src: url('assets/IBMFONTS/IBMPlexSans-MediumItalic.woff') format('woff'), url('assets/IBMFONTS/IBMPlexSans-MediumItalic.ttf') format('ttf'), url('assets/IBMFONTS/IBMPlexSans-MediumItalic.otf') format('otf');
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    font-family: PlexRegular, sans-serif !important;
 }
 
 .good {
@@ -101,4 +115,18 @@ body {
   }
   .codePill:hover {
     background-color: #A5A7AA;
+  }
+  
+  .custom {
+      background-color:#000000;
+  }
+
+  .matrix {
+      color:#02F453;
+      font-family: Lucida Console, Courier, monospace;
+      caret-color: white
+  }
+
+  .matrixFocus {
+    border: 2px solid #02F453 !important;
   }

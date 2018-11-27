@@ -1,16 +1,16 @@
-<div #inputBox id="input-area" tabindex="0" [ngClass]="boxSize">
-  <div class="text-area">
-      <span 
-        #lastInput
-        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
-        id="input-span" 
-        contenteditable
-        [innerHTML]="textHTMLstring"
-        [ngClass]="{'pending': responsePending}"
-        (input)="textChange($event.target.textContent)">
-      </span>
-      <span *ngIf="responsePending"><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></span>
-      <span (click)="focusInput()"  (dblclick)="selectAll()" class="blank-input"></span>
+<div #inputBox id="input-area" tabindex="0" [ngClass]="[boxSize, boxClass]">
+  <div class="text-area" [ngClass]="{'pending': responsePending}">
+    <span 
+      #lastInput
+      autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+      id="input-span" 
+      contenteditable
+      [innerHTML]="textHTMLstring"
+      [ngClass]="fontClass"
+      (input)="textChange($event.target.textContent)">
+    </span>
+    <span *ngIf="responsePending"><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></span>
+    <span (click)="focusInput()"  (dblclick)="selectAll()" class="blank-input"></span>
   </div>
   <div (click)="focusInput()" (dblclick)="selectAll()" class="rest"></div>
 </div>

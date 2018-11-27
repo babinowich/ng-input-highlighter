@@ -1,7 +1,6 @@
 #input-area{
 	color: #000000;
 	margin-top:10px;
-	background-color: #F3F6FA;
 	border-radius: 5px;
 	/* height:250px; */
 	width:100%;
@@ -9,6 +8,11 @@
 	overflow:hidden;
 	padding: 10px;
 }
+
+.none {
+	background-color: #F3F6FA;
+}
+
 .xsmall {
 	height: 41px;
 }
@@ -57,13 +61,5 @@
 
 .pending {
 	opacity: 0.3;
-}
-
-::selection {
-	background: #444782; /* WebKit/Blink Browsers */
-	color:white;
-}
-::-moz-selection {
-	background: #444782; /* WebKit/Blink Browsers */
-	color:white;
+	color: gray !important;
 }
