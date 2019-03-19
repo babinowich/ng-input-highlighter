@@ -1,15 +1,28 @@
 {
   "name": "ng-input-highlighter",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "peerDependencies": {
     "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
     "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
   },
-  "license":"GPL-3.0",
+  "license": "GPL-3.0",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/babinowich/ng-input-highlighter"
+    "type": "git",
+    "url": "https://github.com/babinowich/ng-input-highlighter"
   },
-  "description":"Rich-text Angular input that decorates text with a designated css class, allowing for lookups by words or items at designated indices.",
-  "keywords":["angular","input","text decorator","highlight","css","entity extraction"]
+  "description": "Rich-text Angular input that decorates text dynamically created components on the fly for target words, allowing for local lookups by string or items at designated indices.",
+  "keywords": [
+    "angular",
+    "input",
+    "text decorator",
+    "highlight",
+    "directive",
+    "css",
+    "entity extraction"
+  ],
+  "dependencies": {
+    "@angular/animations": "^7.2.9",
+    "@angular/cdk": "^7.3.4",
+    "@angular/material": "^7.3.4"
+  }
 }

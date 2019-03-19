@@ -1,5 +1,5 @@
-import { Component, OnChanges } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
+import { Component } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 
 @Component({
   selector: 'app-root',
@@ -7,86 +7,81 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'ng-input-highlighter-app';
-
   public targetItems = [
     {
       text: 'meow',
-      css: 'good'
+      css: 'good',
+      type: 'Animal Sound',
+      menu: {
+        replacementOptions: [
+          { viewValue: 'Mew', value: 'mew' },
+          { viewValue: 'Hiss', value: 'hiss' },
+          { viewValue: 'Purr', value: 'purr' }
+        ],
+        descriptionItems: [
+          'Suggested cat sounds'
+        ]
+      }
     },
     {
       text: 'woof',
-      css: 'bad'
+      css: 'bad',
+      type: 'Animal Sound',
+      menu: {
+        replacementOptions: [
+          { viewValue: 'Bark', value: 'bark' },
+          { viewValue: 'Grr', value: 'grr' },
+          { viewValue: 'Bowwow', value: 'bowwow' }
+        ],
+        descriptionItems: [
+          'Suggested dog sounds'
+        ]
+      }
+    }
+  ]
+  public menuOptions = [
+    {
+      replacementOptions: [
+        { viewValue: 'Bark', value: 'bark' },
+        { viewValue: 'Grr', value: 'grr' },
+        { viewValue: 'Bowwow', value: 'bowwow' }
+      ],
+      descriptionItems: [
+        'Suggested dog sounds'
+      ]
+    },
+    {
+      replacementOptions: [
+        { viewValue: 'Mew', value: 'mew' },
+        { viewValue: 'Hiss', value: 'hiss' },
+        { viewValue: 'Purr', value: 'purr' }
+      ],
+      descriptionItems: [
+        'Suggested cat sounds'
+      ]
+    },
+    {
+      replacementOptions: [
+        { viewValue: 'Pizza', value: 'pizza' },
+        { viewValue: 'Sushi', value: 'sushi' },
+        { viewValue: 'Cheeseburger', value: 'cheeseburger' }
+      ],
+      descriptionItems: [
+        'Suggested deliciousness'
+      ]
     }
   ]
 
   public itemForm: FormGroup
-
-
   public analyzedItems = []
   public toggleAdd = false
-  public addError = false
-  public fullyFilled = false
-
-  rootDirectory: any[] = [
-    {
-        name: "Applications",
-        icon: "folder",
-        expanded: true,
-        files: [
-            {
-                icon: "calendar",
-                name: "Calendar",
-                active: true
-            },
-            {
-                icon: "line-chart",
-                name: "Charts",
-                active: false
-            },
-            {
-                icon: "dashboard",
-                name: "Dashboard",
-                active: false
-            },
-            {
-                icon: "map",
-                name: "Maps",
-                active: false
-            }
-        ]
-    },
-    {
-        name: "Files",
-        icon: "folder",
-        expanded: false,
-        files: [
-            {
-                icon: "file",
-                name: "Cover Letter.doc",
-                active: false
-            }
-        ]
-    },
-    {
-        name: "Images",
-        icon: "folder",
-        expanded: false,
-        files: [
-            {
-                icon: "image",
-                name: "Screenshot.png",
-                active: false
-            }
-          ]
-    }
-];
-
 
   constructor(private _fb: FormBuilder) {
     this.itemForm = this._fb.group({
       text: ['', Validators.required],
-      css: ['', Validators.required]
+      css: ['', Validators.required],
+      type: [null],
+      menu: [null]
     })
   }
 
@@ -106,21 +101,20 @@ export class AppComponent {
   }
 
   addTargetItem() {
-    this.toggleAdd = true
+    this.toggleAdd = this.toggleAdd ? null : true
   }
 
   submitTargetAdd() {
-    let newItem = this.itemForm.value
+    const newItem = this.itemForm.value
+    for (const i in this.menuOptions) {
+      if (this.menuOptions[i].descriptionItems[0] === newItem.menu) {
+        newItem.menu = this.menuOptions[i]
+      }
+    }
     this.targetItems.push(newItem)
     this.toggleAdd = false
     console.log(this.targetItems)
   }
-
-
-openFile(directoryName: string, fileName: string) {
-}
-
-
 }
 
 function localAnalysis(searchTargets, str, caseSensitive?) {
@@ -139,7 +133,7 @@ function localAnalysis(searchTargets, str, caseSensitive?) {
     //     return 'An error occurred. There appears to be no input search string.'
     // }
     while ((index = str.indexOf(item.text, startIndex)) > -1) {
-      let indexItem = {
+      const indexItem = {
         text: item.text,
         location: [index, index + searchStrLen],
         css: item.css

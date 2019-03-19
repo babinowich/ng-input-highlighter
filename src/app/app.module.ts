@@ -7,14 +7,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
-
+import { JsonViewerComponent } from './json-viewer/json-viewer.component'
 import { NgInputHighlighterModule } from 'ng-input-highlighter';
 
 import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    JsonViewerComponent
   ],
   imports: [
     BrowserModule,

@@ -25,3 +25,15 @@
     background-color:#EFF1FF;
     border-radius:18px;
 }
+
+.jsonContainer{
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    border-left: 15px solid #2F3842;
+    height:300px;
+    height:300px;
+    overflow-y: scroll;
+    background-color:#000000;
+    border-radius: 8px;
+    padding:13px;
+    border: 1px solid rgb(204, 204, 204);
+  }

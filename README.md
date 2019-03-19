@@ -4,19 +4,22 @@ Rich-text input that decorates text with a designated css class
 
 Checkout the [demo](https://ng-input-highlighter.firebaseapp.com/) 
 
-Key Features
+This Angular library creates a rich-text input that decorates text with a designated css class without using separate div's, allowing normal html web interactions such as selecting and right-click. The entire textbox is a contenteditable div with conjoined Angular directives rendered on the fly. 
 
-Flexibility with Internal or External Parsing
+## Key Features
 
-Allow the Component to perform simple quick lookups and find indices of select target words or provide an array of items and indices for the component to decorate. This lets your parsing be as advanced as you'd like, using outputs from NLP APIs such as IBM Watson.
+#### Flexibility with Internal or External Parsing
+Allow the Component to perform simple quick lookups and find indices of select target words or provide an array of items and indices for the Component to render. This lets your parsing be as advanced as you'd like, using outputs from NLP APIs such as IBM Watson or as simple as a string match.
 
-Use Normal CSS Classes For Decorations
+#### Use Normal CSS Classes For Decorations
+The Component sets the class of identified target words to whatever class you want. Just give it the string name for the target, and it will set it on the rendered directive. For examples of CSS used in the demo, checkout the bottom of the page.</p>
 
-The Component sets the targeted spans class to whatever class you want. Just give it the string name for the target, and it will set it. For examples of CSS used in the demo, checkout the bottom of the page.
+#### Normal HTML Accessibility
+While the Component is actually several divs and spans, it appears and functions as one. Clicking and dragging allows for normal fluid selection. Clicks in the empty spaces brings the caret position to the end of the input naturally and bring focus to the entire textbox. Double clicks inside the textbox select all text.
 
-Normal HTML Accessibility
+#### Ability to Add Actions and Pop Up Menus
+Since each identified word is its own component, the Component has the ability to attach unique menus with descriptions such as Entity Type, Confidence as well as allow for suggested replacements of words identified.
 
-While the Component is actually several divs and spans, it appears and functions as one. Clicks in the empty spaces brings the caret position to the end of the input naturally and bring focus to the entire textbox. Double clicks in empty spaces select all text in the box.
 
 ## Requirements
 Angular 6.0+
@@ -41,6 +44,7 @@ With objects as:
         text: string,
         css: string
     } 
+If you'd like to add menus and replacement options, refer to the documentation and demo for optional attributes on the targetItem class.
 
 If you choose to do external analysis, meaning letting a separate parsing service look for specific entities, place the component in your html with:
 
@@ -54,7 +58,7 @@ With objects as:
     } 
 
 
-For more information on use, check out the [demo](https://ng-input-highlighter.firebaseapp.com/) 
+For more information on use with further customization, check out the [demo](https://ng-input-highlighter.firebaseapp.com/) 
 
 ## To run the local demo app
 

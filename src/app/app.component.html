@@ -6,16 +6,18 @@
 </div>
 <div class="container">
   <p>
-    This Angular library creates a rich-text input that decorates text with a designated css class without using separate div's, allowing normal html web interactions such as selecting and right-click. The entire textbox is a contenteditable div with conjoined spans of text and empty spaces. 
+    This Angular library creates a rich-text input that decorates text with a designated css class without using separate div's, allowing normal html web interactions such as selecting and right-click. The entire textbox is a contenteditable div with conjoined Angular directives rendered on the fly. 
   </p>
   <h3>Key Features</h3>
   <div>
     <b>Flexibility with Local or External Parsing</b>
-    <p>Allow the Component to perform simple quick lookups and find indices of select target words or provide an array of items and indices for the component to decorate. This lets your parsing be as advanced as you'd like, using outputs from NLP APIs such as IBM Watson.</p>
+    <p>Allow the Component to perform simple quick lookups and find indices of select target words or provide an array of items and indices for the Component to render. This lets your parsing be as advanced as you'd like, using outputs from NLP APIs such as IBM Watson or as simple as a string match.</p>
     <b>Use Normal CSS Classes for Decorations</b>
-    <p>The Component sets the targeted spans class to whatever class you want. Just give it the string name for the target, and it will set it. For examples of CSS used in the demo, checkout the bottom of the page.</p>
+    <p>The Component sets the class of identified target words to whatever class you want. Just give it the string name for the target, and it will set it on the rendered directive. For examples of CSS used in the demo, checkout the bottom of the page.</p>
     <b>Normal HTML Accessibility</b>
     <p>While the Component is actually several divs and spans, it appears and functions as one. Clicking and dragging allows for normal fluid selection. Clicks in the empty spaces brings the caret position to the end of the input naturally and bring focus to the entire textbox. Double clicks inside the textbox select all text.</p>
+    <b>Ability to Add Actions and Pop Up Menus</b>
+    <p>Since each identified word is its own component, the Component has the ability to attach unique menus with descriptions such as Entity Type, Confidence as well as allow for suggested replacements of words identified.</p>
   </div>
   <div id="usage">
     <h3>Usage</h3>
@@ -34,22 +36,29 @@ imports: [ NgInputHighlighterModule ]</pre>
     The html selector is <code>lib-ng-input-highlighter</code>  Take a look at the <a href="#examples">examples</a> below for different options.
   </div>
   <h3>Demo of Local Parsing Method for Simple Lookups</h3>
-  <p>Providing an array of target words to look for and a corresponding css class to decorate them with. As the user types, the component will look for the target words after a 2 second period of inactivity.</p>
-  <p>Use the following tool to add or remove target items that the demo component below will look for as you type. Enter a new string you'd like decorated in 'text' and select one of the preconfigured css classes to decorate it with. Start typing in the box for it to refresh and look for the new set of target items in the text you just typed.</p>
+  <p>First, let's see what this Component can do.</p>
+  <p>The simpliest use case is to provide an array of target words for the Component to look for and a corresponding css class to decorate them with. As the user types, the Component will look for the target words after a 2 second period of inactivity by default. The period of inactivity can be customized.</p>
+  <p>Use the following tool to add or remove target items that the demo component below will look for as you type. Enter a new string you'd like decorated in 'text and select one of the preconfigured css classes to decorate it with. Next, you can enter a string for an Entity Type and select a preconfigured set of menu options for it.
   <div class="row">
-    <div class="col-xs-12 col-md-7">
+    <div class="col-xs-12 col-md-8">
         <div style="margin-top:10px">
-            <b>Add or remove target items for the input box below</b>
+            <h4>Add or remove target items for the input box below</h4>
             <form [formGroup]="itemForm" (ngSubmit)="submitTargetAdd()" id="itemForm">
               <table class="table" style="width:700px;display: block;margin-left: auto; margin-right: auto;">
                 <tr>
-                  <th style="width:50px">
+                  <th style="width:30px">
                   </th>
-                  <th style="width:400px">
+                  <th style="width:200px">
                     text
                   </th>
-                  <th style="width:250px">
+                  <th style="width:200px">
                     decorator class
+                  </th>
+                  <th style="width:250px">
+                    optional entity type
+                  </th>
+                  <th style="width: 310px">
+                    optional attached menu
                   </th>
                 </tr>
                 <tr *ngFor="let item of targetItems">
@@ -62,24 +71,38 @@ imports: [ NgInputHighlighterModule ]</pre>
                   <td>
                     {{ item.css }}
                   </td>
+                  <td>
+                    {{ item.type }}
+                  </td>
+                  <td *ngIf="item.menu">
+                    {{ item.menu.descriptionItems[0] }}
+                  </td>
+                  <td *ngIf="!item.menu">
+                    none
+                  </td>
                 </tr>
                 <tr>
                   <td class="addButtonCell" (click)="addTargetItem()">
                     <i class="fa fa-plus-circle"></i>
                   </td>   
                   <td *ngIf="!toggleAdd">
-                    Add new target item
+                    Add new target 
                   </td> 
+                  <td *ngIf="!toggleAdd">
+                      <span style="margin-left:-38px">item</span>
+                  </td>
+                  <td *ngIf="!toggleAdd">
+                  </td>
                   <td *ngIf="!toggleAdd">
                   </td>
                   <td *ngIf="toggleAdd" >
-                    <mat-form-field>
+                    <mat-form-field style="display:inline-block;width:120px">
                       <input matInput placeholder="enter item text" name="text" formControlName="text">
                     </mat-form-field>
                   </td> 
                   <td *ngIf="toggleAdd" >
-                    <mat-form-field style="display:inline-block;width:220px">
-                      <mat-select placeholder="select predefined class" formControlName="css" >
+                    <mat-form-field style="display:inline-block;width:120px">
+                      <mat-select placeholder="css" formControlName="css" >
                         <mat-option value="good">good (green)</mat-option>
                         <mat-option value="bad">bad (red)</mat-option>
                         <mat-option value="happy">happy (yellow)</mat-option>
@@ -87,7 +110,20 @@ imports: [ NgInputHighlighterModule ]</pre>
                         <mat-option value="rainbow">rainbow</mat-option>
                       </mat-select>          
                     </mat-form-field>
-                    <button [disabled]="!itemForm.valid" style="display:inline-block; margin-left:20px" (click)="submitTargetAdd()">Add</button>
+                  </td>
+                  <td *ngIf="toggleAdd" >
+                    <mat-form-field style="display:inline-block;width:120px">
+                      <input matInput placeholder="entity type" name="type" formControlName="type">
+                    </mat-form-field>
+                  </td>
+                  <td *ngIf="toggleAdd" >
+                    <mat-form-field style="display:inline-block;width:120px">
+                      <mat-select placeholder="menu" formControlName="menu" >
+                        <mat-option *ngFor="let item of menuOptions" value="{{item.descriptionItems[0]}}">{{ item.descriptionItems[0] }}</mat-option>
+                        <mat-option value="{{null}}">none</mat-option>
+                      </mat-select>          
+                    </mat-form-field>
+                    <button [disabled]="!itemForm.valid" style="display:inline-block;margin-left:6px" (click)="submitTargetAdd()">Add</button>
                   </td>
                 </tr>
               </table>
@@ -95,29 +131,41 @@ imports: [ NgInputHighlighterModule ]</pre>
         </div>
     </div>
     <div class="col-xs-12 col-md-4">
-      <div class="customPrintContainer">
-        <span style="color:#BCB675">this</span>.targetItems = {{ '{ [' }}
+      <!-- <div class="jsonContainer">
+          <krb-json-viewer [json]="targetItems" [expanded]="true"></krb-json-viewer>
+      </div> -->
+      <div class="jsonContainer">
+        <span style="color:#BCB675;">this</span><span style="color:#89BDFF">.targetItems</span> <span style="color:white"> = {{ '{ [' }}</span>
           <pre class="customPrint" *ngFor="let item of targetItems; last as isLast ">{{ item | json }}<span *ngIf="!isLast">,</span></pre>
-        {{ '] }' }} 
+        <span style="color:white">{{ '] }' }} </span>
       </div>
     </div>
   </div>
   <br>
-  <b id="examples">Test it out! Write some of those target items in the input below</b>
-  <p>Write a sentence in the box below containing some of the target words from the list to see the component decorate. If no target words are found, nothing will be decorated.</p> 
+  <h4>Now test it out! Write some of those target items in the input below</h4>
+  <p>Write a sentence in the box below containing some of the target words from the list to see the component identify the targets and render the decorated Highlighted Components on the fly. If no target words are found, nothing will be decorated.</p> 
+  <p>If an optional attached menu is specified, the Component will render a clickable menu with the preconfigured options. You can use the menuItem class to make your own menu description and fill replacement options.</p>
   <p>Case sensitivity is turned off for the demo below.</p>
   <!-- <p class="codePill" style="float:right">View code  <i class="fa fa-code" aria-hidden="true"></i></p> -->
   <lib-ng-input-highlighter [localAnalysis]="true" [targetItems]="targetItems" [initFocus]="false"></lib-ng-input-highlighter>
   <pre class="prettyprint"  style="margin:7px 0px 0px 0px; width: 100%">
 &lt;lib-ng-input-highlighter [localAnalysis]=&quot;true&quot; [targetItems]=&quot;targetItems&quot;&gt;&lt;/lib-ng-input-highlighter&gt;</pre>
+  <b>Decorator Classes</b>
+  <p>The css classes in the demo above are just illustrative. The component takes in a string name for a css class and applies it to the identified target segment. Add your own class into your app's root component to decorate the text however you'd like. If no css class is provided, a default style with a background of a blue background will be used for all. The text string will also be output if you'd like to that to be sent to its parent component. See <a href="#examples">outputs</a> for more events the Component emits.</p>
+  <p>If you want to use the demo's css classes, checkout <a href="#example-classes"> the css below</a></p>
+  <b>Menu Classes</b>
+  <p>The css classes in the demo above are just illustrative. The component takes in a string name for a css class and applies it to the identified target segment. Add your own class into your app's root component to decorate the text however you'd like. If no css class is provided, a default style with a background of a blue background will be used for all. The text string will also be output if you'd like to that to be sent to its parent component. See <a href="#examples">outputs</a> for more events the Component emits.</p>
+  <p>If you want to use the demo's css classes, checkout <a href="#example-classes"> the css below</a></p>
+
   <div class="attention">
-    <b>Decorator Classes</b>
-    <p>The css classes in the demo above are just illustrative. The component takes in a string name for a css class and applies it to the identified target segment. Add your own class into your app's root component to decorate the text however you'd like.</p>
-    <p>If no css class is provided, a default style with a background of a blue background will be used for all. The text string will also be output if you'd like to that to be sent to the parent component.</p>
+    <b>Local Parsing Method</b>
+    <p>Using the Component's built in simple parsing method relies entirely on finding indexOf target strings in the given textbox input.</p>
+    <p>The limitations of this should be clear- looking for a target of 'at' will be found in the word 'cat'.</p>
+    <p>In future releases, the Component will use more sophisticated methods on its local parsing algorithm, but for now- the Local Parsing should only be used in the simpliest of use cases or to demo the function of the Component. Please refer to the External Parsing for Advanced Lookups for info on using this Component with NLP services. </p>
     <p style="margin:0px">If you want to use the demo's css classes, checkout <a href="#example-classes"> the css below</a></p>
   </div>
   <br>
-  <h3>Input box options</h3>
+  <h3>Demos of Input box options</h3>
   <b>One Line Height (Extra Small) </b>Complete list of sizes in <a href="#inputs">Inputs</a> below
   <lib-ng-input-highlighter [localAnalysis]="true" [targetItems]="targetItems" [initFocus]="false" [boxHeight]="'XS'"></lib-ng-input-highlighter>
   <pre class="prettyprint"  style="margin:7px 0px 0px 0px; width: 100%">
@@ -182,9 +230,9 @@ imports: [ NgInputHighlighterModule ]</pre>
 </div>
 <div class="container">
   <h3>Walkthrough for Using External Parsing for Advanced Lookups</h3>
-  <p>The component outputs the string of text in the box for analysis in its parent component after a two second pause in typing, allowing the use of an external NLP parsing service such as <a href="https://www.ibm.com/watson/services/natural-language-understanding/" target="_blank">IBM Watson Natural Language Understanding</a> or <a href="https://cloud.google.com/natural-language/" target="_blank">Google Cloud Natural Language</a> for entity, concept, or keyword extraction.</p>
-  <p>Instead of using simple lookups in the Internal Parsing, the component relies on given indices for target words. </p>
-  <p>The parent service will need to parse the original output string either on its own and combine identified targets into an analyzed input array of identified items with their start and end index per the TargetItem Class</p>
+  <p>The component outputs the string of text in the box for analysis in its parent component after a default two second pause in typing, allowing the use of an external NLP parsing service such as <a href="https://www.ibm.com/watson/services/natural-language-understanding/" target="_blank">IBM Watson Natural Language Understanding</a> or <a href="https://cloud.google.com/natural-language/" target="_blank">Google Cloud Natural Language</a> for entity, concept, or keyword extraction.</p>
+  <p>With this implementation, the Component relies on given indices for target words instead of performing simple string lookups locally. </p>
+  <p>The parent component will need to grab and parse the Component's output string on its own and combine identified targets into an analyzed input array of identified items with their start and end index per the targetItem Class.</p>
   <p>The location attribute is not optional if localAnalysis is set to false. If any of the targetItem array items do not have a location with a proper start and end index, the textbox will display an error message letting you know which items do not have an index.</p>
   <div class="attention">
     <b>Discrete Target Words</b>
@@ -217,7 +265,13 @@ imports: [ NgInputHighlighterModule ]</pre>
       <td>initFocus</td>
       <td>boolean</td>
       <td>true</td>
-      <td>auto focus the cursor on component initialization; recommended for accessibility</td>
+      <td>option to change auto focus the cursor on component initialization; recommended for accessibility</td>
+    </tr>
+    <tr>
+      <td>idleTime</td>
+      <td>number</td>
+      <td>2000</td>
+      <td>option to change time in ms of inactivity in textbox to wait for before processing</td>
     </tr>
     <tr>
       <td>caseSensitive</td>
@@ -277,20 +331,58 @@ imports: [ NgInputHighlighterModule ]</pre>
   </table>
   <h3>TargetItem Class</h3>
   <div class="row">
-    <div class="col-xs-12 col-md-8">
+    <div class="col-xs-12 col-md-7">
       <p>The targetItem class is required for each item in the targetItems array. CSS refers to the string of the class name that you would like to decorate your text targets with.</p>
+      <p>Each targetItem can have an optional attached menu associated with it to be brought up upon a click. The menu can serve to propvide information in description items or have an array of potential replacements. If null, the target item will not be clickable. See below menuItem class for more.</p>
+      <p>Additionally, each item can have attached a string type (such as entity or concept type) as well as a confidence associated with the extraction, both of which can be useful when using external NLP.</p>
       <p>If using external analysis, supply the index location beginning and end of each text item in relation to the original text string.</p>
     </div>
-    <div class="col-xs-12 col-md-4">
+    <div class="col-xs-12 col-md-5">
     <pre class="prettyprint" style="margin:0px">
   targetItem: {{ '{' }}
     text: string,
-    css?: string,
+    css: string,
+    menu?: MenuItem,
+    type?: string,
+    confidence?: number,
     location?: [number, number]
   {{ '}' }}</pre>
       </div>
   </div>
-  <h3>Example Classes Used in Demo</h3>
+  <h3>MenuItem Class</h3>
+  <div class="row">
+    <div class="col-xs-12 col-md-7">
+      <p>The menuItem class is optional for each item in the targetItems array.</p>
+      <p>The menu will display as a material design popup menu with the descriptionItems looped and displayed on the top of the menu, serving as a way to provide more information with the extracted word.</p>
+      <p>Optionally, replacement options for the word can be provided as well. For instance, if one word was identified, provided suggested replacements can be shown in the menu too.</p>
+    </div>
+    <div class="col-xs-12 col-md-5">
+    <pre class="prettyprint" style="margin:0px">
+  menuItem: {{ '{' }}
+    type: string,
+    css?: string,
+    descriptionItems?: Array{{ '<' }}Text{{ '>' }},
+    replacementOptions?: Array{{ '<' }}ReplacementItem{{ '>' }}
+  {{ '}' }}</pre>
+      </div>
+  </div>
+  <h3>ReplacementItem Class</h3>
+  <div class="row">
+    <div class="col-xs-12 col-md-7">
+      <p>The replacementItem class is optional for each suggested item for the menu to display once a target word is identified.</p>
+      <p>Each replacemengt item must have a normalized viewValue which is displayed in the menu, and a value which is what is rendered in the textbox. See the demo as an example.</p>
+      <p>If a suggested replacement is selected, the original text will be appended to this list, allowing for the user to "undo" his/her replacement.</p>
+    </div>
+    <div class="col-xs-12 col-md-5">
+    <pre class="prettyprint" style="margin:0px">
+  replacementItem: {{ '{' }}
+    viewValue: string,
+    value: string,
+    data?: any
+  {{ '}' }}</pre>
+      </div>
+  </div>
+  <h3>Example CSS Used in Demo</h3>
   <div id="example-classes" class="row">
     <div class="col-xs-12 col-md-6">
       <pre class="prettyprint"  style="margin:0px">

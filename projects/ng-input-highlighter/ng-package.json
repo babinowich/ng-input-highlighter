@@ -3,5 +3,10 @@
   "dest": "../../dist/ng-input-highlighter",
   "lib": {
     "entryFile": "src/public_api.ts"
-  }
+  },
+  "whitelistedNonPeerDependencies": [
+    "@angular/animations",
+    "@angular/material",
+    "@angular/cdk"
+  ]
 }

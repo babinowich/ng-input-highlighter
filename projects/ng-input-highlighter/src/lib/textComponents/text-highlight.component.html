@@ -1,0 +1,22 @@
+<span *ngIf="!menu" contenteditable style="margin-right:2px;" (click)="clickedText(text)" [ngClass]="css">{{ text }}</span>
+
+<span *ngIf="menu" contenteditable style="margin-right:2px;cursor: pointer;" (click)="clickedText(text)" [ngClass]="css" [matMenuTriggerFor]="appMenu">{{ text }}</span>
+
+<mat-menu #appMenu="matMenu" style="font-size:14px;">
+                <!-- <button mat-menu-item>Settings</button>
+                <button mat-menu-item>Help</button> -->
+    <div *ngIf="menu" style="padding:10px">
+            <p *ngFor="let item of menu.descriptionItems" class="miniMenu">{{ item }}</p>
+            <p *ngIf="type">Identified type: {{ type }}</p>
+            <p *ngIf="confidence">Confidence: {{ confidence }}</p>
+            <mat-form-field *ngIf="menu.replacementOptions">
+                <mat-select placeholder="Potential replacements" [(value)]="selected" (selectionChange)="changedText()">
+                    <mat-option *ngFor="let option of menu.replacementOptions" [value]="option.value">{{ option.viewValue }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+    </div>
+
+    <!-- <span *ngFor="let item of actionBtns">
+        <button mat-menu-item (click)=""></button>
+    <span> -->
+</mat-menu>
